@@ -1,11 +1,12 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React from "react";
+import { useRouter } from "next/router";
+import { authService } from "../src/services/auth/authService";
 
 export default function HomeScreen() {
   const router = useRouter();
   const [values, setValues] = React.useState({
-    usuario: 'omariosouto',
-    senha: 'safepassword',
+    username: "ewerton.augusto",
+    password: "safepassword",
   });
 
   function handleChange(event) {
@@ -16,33 +17,45 @@ export default function HomeScreen() {
         ...currentValues,
         [fieldName]: fieldValue,
       };
-    })
+    });
+  }
+
+  function handleSubmitLogin(event) {
+    // onSubmit - Controller
+    // authService - Service
+    event.preventDefault();
+
+    authService
+      .login({
+        username: values.username,
+        password: values.password,
+      })
+      .then((response) => {
+        // router.push('/auth-page-static');
+        router.push("/auth-page-ssr");
+      })
+      .catch(() => console.log("Invalid user and/or password"));
   }
 
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={(event) => {
-        event.preventDefault();
-
-        // router.push('/auth-page-static');
-        router.push('/auth-page-ssr');
-      }}>
+      <form onSubmit={handleSubmitLogin}>
         <input
-          placeholder="Usuário" name="usuario"
-          value={values.usuario} onChange={handleChange}
+          placeholder="Username"
+          name="username"
+          value={values.usuario}
+          onChange={handleChange}
         />
         <input
-          placeholder="Senha" name="senha" type="password"
-          value={values.senha} onChange={handleChange}
+          placeholder="Password"
+          name="password"
+          type="password"
+          value={values.senha}
+          onChange={handleChange}
         />
-        {/* <pre>
-          {JSON.stringify(values, null, 2)}
-        </pre> */}
         <div>
-          <button>
-            Entrar
-          </button>
+          <button>Login</button>
         </div>
       </form>
     </div>
