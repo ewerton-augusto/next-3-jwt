@@ -9,7 +9,7 @@ export default function HomeScreen() {
     password: "safepassword",
   });
 
-  function handleChange(event) {
+  const handleChange = (event) => {
     const fieldValue = event.target.value;
     const fieldName = event.target.name;
     setValues((currentValues) => {
@@ -18,24 +18,26 @@ export default function HomeScreen() {
         [fieldName]: fieldValue,
       };
     });
-  }
+  };
 
-  function handleSubmitLogin(event) {
+  const handleSubmitLogin = async (event) => {
     // onSubmit - Controller
     // authService - Service
     event.preventDefault();
 
-    authService
-      .login({
-        username: values.username,
-        password: values.password,
-      })
-      .then((response) => {
-        // router.push('/auth-page-static');
-        router.push("/auth-page-ssr");
-      })
-      .catch(() => console.log("Invalid user and/or password"));
-  }
+    const isAuthenticated = await authService.login({
+      username: values.username,
+      password: values.password,
+    });
+
+    if (!isAuthenticated || isAuthenticated.status !== 200) {
+      alert("Invalid user and/or password");
+      return;
+    }
+
+    // router.push('/auth-page-static');
+    router.push("/auth-page-ssr");
+  };
 
   return (
     <div>
@@ -44,14 +46,14 @@ export default function HomeScreen() {
         <input
           placeholder="Username"
           name="username"
-          value={values.usuario}
+          value={values.username}
           onChange={handleChange}
         />
         <input
           placeholder="Password"
           name="password"
           type="password"
-          value={values.senha}
+          value={values.password}
           onChange={handleChange}
         />
         <div>
