@@ -1,3 +1,5 @@
+import { accessTokenService } from "../src/services/auth/tokenService";
+
 function AuthPageSSR(props) {
   return (
     <div>
@@ -12,3 +14,11 @@ function AuthPageSSR(props) {
 }
 
 export default AuthPageSSR;
+
+export async function getServerSideProps(ctx) {
+  return {
+    props: {
+      token: accessTokenService.get(ctx),
+    }
+  }
+}

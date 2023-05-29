@@ -3,8 +3,9 @@
 
 export const httpClient = async (url, options) => {
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_URL = BASE_URL + url;
 
-  return fetch(`${BASE_URL + url}`, {
+  return fetch(API_URL, {
     ...options,
     headers: {
       ...options.headers,
@@ -19,6 +20,6 @@ export const httpClient = async (url, options) => {
       };
     })
     .catch(() => {
-      throw new Error("Please, try again. Invalid user and/or password.");
+      throw new Error(`Please, try again. Error calling the API '${API_URL}'.`);
     });
 };

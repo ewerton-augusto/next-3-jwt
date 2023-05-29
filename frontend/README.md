@@ -8,3 +8,4 @@ NEXT_PUBLIC_API_URL=http://localhost:4000
 
 - Login Service
 - HttpClient 
+- Implement nookies to store the access token
