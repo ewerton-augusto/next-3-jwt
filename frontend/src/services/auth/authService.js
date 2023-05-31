@@ -14,4 +14,16 @@ export const authService = {
     accessTokenService.set(response?.body?.data?.access_token || "");
     return response;
   },
+
+  async getSession(ctx){
+    const token = accessTokenService.get(ctx);
+    const response = await httpClient("/api/session", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    if(response.status !== 200) throw new Error("Error getting the session.");
+    return response.body.data;
+  }
 };
