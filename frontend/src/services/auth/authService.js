@@ -15,7 +15,7 @@ export const authService = {
     return response;
   },
 
-  async getSession(ctx){
+  async getSession(ctx = null){
     const token = accessTokenService.get(ctx);
     const response = await httpClient("/api/session", {
       method: "GET",
