@@ -1,14 +1,15 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React from "react";
+import { useRouter } from "next/router";
+import { authService } from "../src/services/auth/authService";
 
 export default function HomeScreen() {
   const router = useRouter();
   const [values, setValues] = React.useState({
-    usuario: 'omariosouto',
-    senha: 'safepassword',
+    username: "ewerton.augusto",
+    password: "safepassword",
   });
 
-  function handleChange(event) {
+  const handleChange = (event) => {
     const fieldValue = event.target.value;
     const fieldName = event.target.name;
     setValues((currentValues) => {
@@ -16,33 +17,47 @@ export default function HomeScreen() {
         ...currentValues,
         [fieldName]: fieldValue,
       };
-    })
-  }
+    });
+  };
+
+  const handleSubmitLogin = async (event) => {
+    // onSubmit - Controller
+    // authService - Service
+    event.preventDefault();
+
+    const isAuthenticated = await authService.login({
+      username: values.username,
+      password: values.password,
+    });
+
+    if (!isAuthenticated || isAuthenticated.status !== 200) {
+      alert("Invalid user and/or password");
+      return;
+    }
+
+    router.push('/auth-page-static');
+    // router.push("/auth-page-ssr");
+  };
 
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={(event) => {
-        event.preventDefault();
-
-        // router.push('/auth-page-static');
-        router.push('/auth-page-ssr');
-      }}>
+      <form onSubmit={handleSubmitLogin}>
         <input
-          placeholder="Usuário" name="usuario"
-          value={values.usuario} onChange={handleChange}
+          placeholder="Username"
+          name="username"
+          value={values.username}
+          onChange={handleChange}
         />
         <input
-          placeholder="Senha" name="senha" type="password"
-          value={values.senha} onChange={handleChange}
+          placeholder="Password"
+          name="password"
+          type="password"
+          value={values.password}
+          onChange={handleChange}
         />
-        {/* <pre>
-          {JSON.stringify(values, null, 2)}
-        </pre> */}
         <div>
-          <button>
-            Entrar
-          </button>
+          <button>Login</button>
         </div>
       </form>
     </div>
